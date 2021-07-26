@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -43,4 +44,17 @@ public class Persona {
     @Column(name="termination_date")
     Date termination_Date;
 
+    public Persona(PersonaDTOInput personaDTO){
+        setId(personaDTO.getId());
+        setUser(personaDTO.getUser());
+        setPassword(personaDTO.getPassword());
+        setSurname(personaDTO.getSurname());
+        setCompany_email(personaDTO.getCompany_email());
+        setPersonal_email(personaDTO.getCompany_email());
+        setCity(personaDTO.getCity());
+        setActive(personaDTO.getActive());
+        setCreated_Date(personaDTO.getCreated_Date());
+        setImagen_url(personaDTO.getImagen_url());
+        setTermination_Date(personaDTO.getTermination_Date());
+    }
 }

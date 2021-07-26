@@ -5,8 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.IPersonaService;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaSaveDTOInput;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaUpdateDTOInput;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
+
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -58,11 +59,12 @@ public class PersonaController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> savePersona(@RequestBody PersonaSaveDTOInput personaDTO) throws Exception {
+    public ResponseEntity<?> savePersona(@RequestBody PersonaDTOInput personaDTO) throws Exception {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.savePersona(personaDTO));
         } catch (Exception e) {
             e.printStackTrace();
+
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error servidor");
 
         }
@@ -70,7 +72,7 @@ public class PersonaController {
     }
 
     @PutMapping("actualizar/{id}")
-    public ResponseEntity<?> updatePersona(@RequestBody PersonaUpdateDTOInput personaDTO, @PathVariable("id") Integer id) throws Exception {
+    public ResponseEntity<?> updatePersona(@RequestBody PersonaDTOInput personaDTO, @PathVariable("id") Integer id) throws Exception {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.updatePersona(personaDTO, id));
         } catch (Exception e) {
@@ -86,7 +88,10 @@ public class PersonaController {
         try {
             service.deletePersona(id);
             return ResponseEntity.status(HttpStatus.OK).body("persona borrada con exito");
-        } catch (Exception e) {
+        }catch (NoSuchElementException e){
+           e.printStackTrace();
+           return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No existe elemento con id:"+id);
+        }  catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error servidor");
 

@@ -4,11 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.Ivalidation;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.domain.Persona;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaSaveDTOInput;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaUpdateDTOInput;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.MostrarPersonaDTO;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.PersonaSaveDTOOutput;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.PersonaUpdateDTOOutput;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.PersonaDTOOutput;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.repository.IPersonaRepository;
 
 import javax.transaction.Transactional;
@@ -25,79 +22,65 @@ public class PersonaServiceimpl implements IPersonaService {
 
     @Override
     @Transactional
-    public MostrarPersonaDTO findpersonabyID(Integer id) throws Exception {
+    public PersonaDTOOutput findpersonabyID(Integer id) throws Exception {
         Persona persona = repositorio.findById(id).orElseThrow(() -> new NoSuchElementException("no existe usuario con id:" + id));
-        MostrarPersonaDTO devolverDTO = new MostrarPersonaDTO();
-        devolverDTO = devolverDTO.toPersonaDTO(persona);
-        return devolverDTO;
+
+        return new PersonaDTOOutput(persona);
 
     }
 
     @Override
     @Transactional
-    public MostrarPersonaDTO findpersonabyUser(String user) throws Exception {
+    public PersonaDTOOutput findpersonabyUser(String user) throws Exception {
         Persona persona = repositorio.findByUser(user).orElseThrow(() -> new NoSuchElementException("no existe usuario con user:" + user));
-        MostrarPersonaDTO devolverDTO = new MostrarPersonaDTO();
-        devolverDTO = devolverDTO.toPersonaDTO(persona);
-        return devolverDTO;
+
+        return new PersonaDTOOutput(persona);
 
     }
 
     @Override
     @Transactional
-    public List<MostrarPersonaDTO> allpersonas() throws Exception {
+    public List<PersonaDTOOutput> allpersonas() throws Exception {
 
         List<Persona> personas = repositorio.findAll();
-        List<MostrarPersonaDTO> personasDTO = new ArrayList();
-        MostrarPersonaDTO guardar = new MostrarPersonaDTO();
-        for (Persona elemento : personas) {
-            personasDTO.add(guardar.toPersonaDTO(elemento));
-        }
+        List<PersonaDTOOutput> personasDTO = new ArrayList();
+        personas.forEach(persona -> personasDTO.add(new PersonaDTOOutput(persona)));
         return personasDTO;
     }
 
 
     @Override
     @Transactional
-    public PersonaSaveDTOOutput savePersona(PersonaSaveDTOInput personaDTO) throws Exception {
-        Persona persona = personaDTO.toPersona(personaDTO);
+    public PersonaDTOOutput savePersona(PersonaDTOInput personaDTO) throws Exception {
+        validador.validarPersona(personaDTO);
 
-        validador.validarPersona(persona);
+        Persona persona = new Persona(personaDTO);
 
-        persona = repositorio.save(persona);
-        PersonaSaveDTOOutput personaDTOOutput = new PersonaSaveDTOOutput();
-        personaDTOOutput = personaDTOOutput.toPersonaSaveDTO(persona);
-        return personaDTOOutput;
+        repositorio.save(persona);
+
+        return new PersonaDTOOutput(persona);
 
     }
 
     @Override
     @Transactional
-    public PersonaUpdateDTOOutput updatePersona(PersonaUpdateDTOInput personaDTO, Integer id) throws Exception {
-        Persona persona = personaDTO.toPersona(personaDTO);
-        validador.validarPersona(persona);
+    public PersonaDTOOutput updatePersona(PersonaDTOInput personaDTO, Integer id) throws Exception {
+        validador.validarPersona(personaDTO);
+
+        Persona persona = new Persona(personaDTO);
 
         Persona comprobarExistePersona = repositorio.findById(id).orElseThrow(() -> new NoSuchElementException("no existe usuario con id:" + id));
-        if (comprobarExistePersona.getId() == persona.getId()) {
-            persona = repositorio.save(persona);
-            PersonaUpdateDTOOutput personaDTOOutput = new PersonaUpdateDTOOutput();
-            personaDTOOutput = personaDTOOutput.toPersonaUpdateDTO(persona);
-            return personaDTOOutput;
 
-        }
-        throw new Exception("Numero de id de la personaDTO no coincide con el id:" + id + "en el objeto que se quiere actualizar");
+        repositorio.save(persona);
 
+        return new PersonaDTOOutput(persona);
 
     }
 
     @Override
     @Transactional
     public void deletePersona(Integer id) throws Exception {
-        Persona borrado = repositorio.getById(id);
-        if (borrado != null) {
+        Persona borrado = repositorio.findById(id).orElseThrow(()->new NoSuchElementException("no existe elemento con id:"+id+" para ser borrado"));
             repositorio.deleteById(id);
-        }
-        throw new NoSuchElementException("no existe persona con id:"+id+"en la base de datos");
-
     }
 }

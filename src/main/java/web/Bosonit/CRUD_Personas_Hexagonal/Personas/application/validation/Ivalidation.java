@@ -1,12 +1,11 @@
 package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation;
 
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.domain.Persona;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.MostrarPersonaDTO;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
 
 import java.util.Date;
 
 public interface Ivalidation {
-    void validarPersona(Persona persona) throws Exception;
+    void validarPersona(PersonaDTOInput persona) throws Exception;
 
     void validateUser(String user) throws Exception;
 
