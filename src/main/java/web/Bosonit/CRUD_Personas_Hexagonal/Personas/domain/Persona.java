@@ -1,0 +1,46 @@
+package web.Bosonit.CRUD_Personas_Hexagonal.Personas.domain;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+import java.util.Date;
+
+@Entity
+@Table(name = "trabajadores")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class Persona {
+    @Id
+    @Column(name="id_persona")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    Integer id;
+    @Column(name = "user", nullable = false)
+    String user;
+    @Column(name = "password",nullable = false)
+    String password;
+    @Column(name="surname",nullable = false)
+    String surname;
+    @Column(name = "company_email",nullable = false)
+    String company_email;
+    @Column(name = "personal_email",nullable = false)
+    String personal_email;
+    @Column(name = "city",nullable = false)
+    String city;
+    @Column(name="active",nullable = false)
+    Boolean active;
+    @Column(name="created_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    Date created_Date;
+    @Column(name="imagen_url")
+    String imagen_url;
+    @Column(name="termination_date")
+    Date termination_Date;
+
+}
