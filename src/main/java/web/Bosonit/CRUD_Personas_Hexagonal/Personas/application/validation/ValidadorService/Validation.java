@@ -1,6 +1,7 @@
-package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation;
+package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.ValidadorService;
 
 import org.springframework.stereotype.Component;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.ValidadorService.Ivalidation;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
 
 import java.util.Date;
@@ -28,7 +29,7 @@ public class Validation implements Ivalidation {
         if (user != null) {
             int userlength = user.length();
             if (userlength < 6 || userlength > 10) {
-                throw new Exception("Campo usuario no cumple con especificaciones de largo");
+                throw new Exception ("Campo usuario no cumple con especificaciones de largo");
             }
         } else {
             throw new Exception("Campo usuario nulo");

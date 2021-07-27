@@ -1,9 +1,11 @@
 package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
-import web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.Ivalidation;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.ValidadorService.Ivalidation;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.domain.Persona;
+import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.Errores.NotFoundException;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.output.PersonaDTOOutput;
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.repository.IPersonaRepository;
@@ -11,7 +13,6 @@ import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.repository.IP
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class PersonaServiceimpl implements IPersonaService {
@@ -23,7 +24,7 @@ public class PersonaServiceimpl implements IPersonaService {
     @Override
     @Transactional
     public PersonaDTOOutput findpersonabyID(Integer id) throws Exception {
-        Persona persona = repositorio.findById(id).orElseThrow(() -> new NoSuchElementException("no existe usuario con id:" + id));
+        Persona persona = repositorio.findById(id).orElseThrow(() -> new NotFoundException("no existe usuario con id:" + id));
 
         return new PersonaDTOOutput(persona);
 
@@ -32,7 +33,7 @@ public class PersonaServiceimpl implements IPersonaService {
     @Override
     @Transactional
     public PersonaDTOOutput findpersonabyUser(String user) throws Exception {
-        Persona persona = repositorio.findByUser(user).orElseThrow(() -> new NoSuchElementException("no existe usuario con user:" + user));
+        Persona persona = repositorio.findByUser(user).orElseThrow(() -> new NotFoundException("no existe usuario con user:" + user));
 
         return new PersonaDTOOutput(persona);
 
@@ -65,11 +66,12 @@ public class PersonaServiceimpl implements IPersonaService {
     @Override
     @Transactional
     public PersonaDTOOutput updatePersona(PersonaDTOInput personaDTO, Integer id) throws Exception {
+
         validador.validarPersona(personaDTO);
 
         Persona persona = new Persona(personaDTO);
 
-        Persona comprobarExistePersona = repositorio.findById(id).orElseThrow(() -> new NoSuchElementException("no existe usuario con id:" + id));
+        Persona comprobarExistePersona = repositorio.findById(id).orElseThrow(() -> new NotFoundException("no existe usuario con id:" + id));
 
         repositorio.save(persona);
 
@@ -80,7 +82,7 @@ public class PersonaServiceimpl implements IPersonaService {
     @Override
     @Transactional
     public void deletePersona(Integer id) throws Exception {
-        Persona borrado = repositorio.findById(id).orElseThrow(()->new NoSuchElementException("no existe elemento con id:"+id+" para ser borrado"));
+        Persona borrado = repositorio.findById(id).orElseThrow(()->new NotFoundException("no existe elemento con id:"+id+" para ser borrado"));
             repositorio.deleteById(id);
     }
 }

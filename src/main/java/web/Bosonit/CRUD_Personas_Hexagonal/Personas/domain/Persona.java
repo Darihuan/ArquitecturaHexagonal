@@ -50,7 +50,7 @@ public class Persona {
         setPassword(personaDTO.getPassword());
         setSurname(personaDTO.getSurname());
         setCompany_email(personaDTO.getCompany_email());
-        setPersonal_email(personaDTO.getCompany_email());
+        setPersonal_email(personaDTO.getPersonal_email());
         setCity(personaDTO.getCity());
         setActive(personaDTO.getActive());
         setCreated_Date(personaDTO.getCreated_Date());

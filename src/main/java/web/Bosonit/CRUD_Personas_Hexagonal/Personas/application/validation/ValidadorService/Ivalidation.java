@@ -1,4 +1,4 @@
-package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation;
+package web.Bosonit.CRUD_Personas_Hexagonal.Personas.application.validation.ValidadorService;
 
 import web.Bosonit.CRUD_Personas_Hexagonal.Personas.infrastructure.controller.dto.input.PersonaDTOInput;
 
